@@ -174,32 +174,35 @@ def cluster_transfer_learn(bucket, prefix, train_pct, batch_size, downsample_to,
 
     worker_rank = int(dist.get_rank())
     
-    if worker_rank == 0:
-        wandb.init(config=wbargs, reinit=True, project = 'cdl-demo')
-    
     # --------- Format model and params --------- #
     device = torch.device("cuda")
     net = models.resnet50(pretrained=False) # True means we start with the imagenet version
     model = net.to(device)
     model = DDP(model)
     
-    # Magic
+    # Set up monitoring
     if worker_rank == 0:
+        wandb.init(config=wbargs, reinit=True, project = 'cdl-demo')
         wandb.watch(model)
     
     criterion = nn.CrossEntropyLoss().cuda()    
     optimizer = optim.SGD(model.parameters(), lr=base_lr, momentum=0.9)
     
     # --------- Retrieve data for training and eval --------- #
-    whole_dataset = preprocess(bucket, prefix)
-    new_class_to_idx = {x: int(replace_label(x, pretrained_classes)[1]) for x in whole_dataset.classes}
-    whole_dataset.class_to_idx = new_class_to_idx
+    # Creates lazy-loading, multiprocessing DataLoader objects
+    # for training and evaluation
     
-    train, val = train_test_split(train_pct,
-                                     whole_dataset, 
-                                     batch_size=batch_size,
-                                     downsample_to=downsample_to,
-                                     subset = subset, workers = worker_ct)
+    whole_dataset = preprocess(bucket, prefix, pretrained_classes)
+    
+    train, val = train_test_split(
+        train_pct,
+        whole_dataset, 
+        batch_size=batch_size,
+        downsample_to=downsample_to,
+        subset = subset, 
+        workers = worker_ct
+    )
+    
     dataloaders = {'train' : train, 'val': val}
 
     # --------- Start iterations --------- #
@@ -212,9 +215,11 @@ def cluster_transfer_learn(bucket, prefix, train_pct, batch_size, downsample_to,
         for inputs, labels in dataloaders["train"]:
             dt = datetime.datetime.now().isoformat()
 
-            inputs, labels, outputs, preds, perct = iterate_model(
-                inputs, labels, model, device)
-            
+            inputs, labels = inputs.to(device), labels.to(device)
+            outputs = model(inputs)
+            _, preds = torch.max(outputs, 1)
+            perct = [torch.nn.functional.softmax(el, dim=0)[i].item() for i, el in zip(preds, outputs)]
+
             loss = criterion(outputs, labels)
             correct = (preds == labels).sum().item()
             
@@ -223,16 +228,12 @@ def cluster_transfer_learn(bucket, prefix, train_pct, batch_size, downsample_to,
             loss.backward()
             optimizer.step()
             count += 1
-            
-            # Track statistics
-            for param_group in optimizer.param_groups:
-                current_lr = param_group['lr']
                 
             # Record the results of this model iteration (training sample) for later review.
             if worker_rank == 0:
                 wandb.log({
                         'loss': loss.item(),
-                        'learning_rate':current_lr, 
+                        'learning_rate':base_lr, 
                         'correct':correct, 
                         'epoch': epoch, 
                         'count': count,
@@ -240,26 +241,24 @@ def cluster_transfer_learn(bucket, prefix, train_pct, batch_size, downsample_to,
                     })
             if worker_rank == 0 and count % 5 == 0:
                 wandb.log({f'predictions vs. actuals, training, epoch {epoch}, count {count}': plot_model_performance(
-                    model, inputs, labels, preds, perct, imagenetclasses)})
+                    model, inputs, labels, preds, perct, pretrained_classes)})
                 
     # --------- Evaluation section --------- #   
         with torch.no_grad():
             model.eval()  # Set model to evaluation mode
             for inputs_t, labels_t in dataloaders["val"]:
                 dt = datetime.datetime.now().isoformat()
-                
-                inputs_t, labels_t, outputs_t, pred_t, perct_t = iterate_model(
-                    inputs_t, labels_t, model, device)
+
+                inputs_t, labels_t = inputs_t.to(device), labels_t.to(device)
+                outputs_t = model(inputs_t)
+                _, pred_t = torch.max(outputs_t, 1)
+                perct_t = [torch.nn.functional.softmax(el, dim=0)[i].item() for i, el in zip(pred_t, outputs_t)]
 
                 loss_t = criterion(outputs_t, labels_t)
                 correct_t = (pred_t == labels_t).sum().item()
             
                 t_count += 1
 
-                # Track statistics
-                for param_group in optimizer.param_groups:
-                    current_lr = param_group['lr']
-                    
                 # Record the results of this model iteration (evaluation sample) for later review.
                 if worker_rank == 0:
                     wandb.log({
@@ -271,7 +270,8 @@ def cluster_transfer_learn(bucket, prefix, train_pct, batch_size, downsample_to,
                     })
                 if worker_rank == 0 and count % 5 == 0:
                     wandb.log({f'predictions vs. actuals, eval, epoch {epoch}, count {t_count}': plot_model_performance(
-                        model, inputs_t, labels_t, pred_t, perct_t, imagenetclasses)})
+                        model, inputs_t, labels_t, pred_t, perct_t, pretrained_classes)})
+
 
 if __name__ == "__main__":
     print("Beginning PyTorch training on Dask Cluster.")

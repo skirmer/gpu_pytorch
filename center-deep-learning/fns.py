@@ -21,6 +21,13 @@ from dask_saturn.external import ExternalConnection
 from dask_saturn import SaturnCluster
 import dask_saturn
 
+
+# Retrieve imagenet model labels
+# Allows using model in pretrained mode
+s3 = s3fs.S3FileSystem(anon=True)
+with s3.open('s3://saturn-public-data/dogs/imagenet1000_clsidx_to_labels.txt') as f:
+    imagenetclasses = [line.strip() for line in f.readlines()]
+
 ### ============== Label formatting ============== ###
 
 def replace_label(dataset_label, model_labels):
@@ -113,13 +120,17 @@ def plot_model_performance(net, images, labels, preds_tensors, perct, trainclass
 
 ### ============== Modeling ============== ###
 
-def preprocess(bucket, prefix):
+def preprocess(bucket, prefix, pretrained_classes):
     '''Initialize the custom Dataset class defined above, apply transformations.'''
     transform = transforms.Compose([
     transforms.Resize(256), 
     transforms.CenterCrop(250), 
     transforms.ToTensor()])
     whole_dataset = data.S3ImageFolder(bucket, prefix, transform=transform, anon = True)
+
+    new_class_to_idx = {x: int(replace_label(x, pretrained_classes)[1]) for x in whole_dataset.classes}
+    whole_dataset.class_to_idx = new_class_to_idx
+
     return whole_dataset
 
 def train_test_split(train_pct, data, batch_size, downsample_to=1, subset = False, workers = 1):
