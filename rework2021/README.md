@@ -1,6 +1,6 @@
 # Scaling Up PyTorch with GPU Cluster Computing
 
-This repo contains materials for my upcoming presentation at [REWORK's Deep Learning Summit](https://www.re-work.co/events/deep-learning-summit) in January 2021. Let me know on twitter [@data_stephanie](https://twitter.com/data_stephanie) if you have questions!
+This repo contains materials for my presentation at [REWORK's Deep Learning Summit](https://www.re-work.co/events/deep-learning-summit) in January 2021. Let me know on twitter [@data_stephanie](https://twitter.com/data_stephanie) if you have questions!
 
 ## What to Expect
 
