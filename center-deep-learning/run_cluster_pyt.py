@@ -215,7 +215,8 @@ def cluster_transfer_learn(bucket, prefix, train_pct, batch_size, downsample_to,
         for inputs, labels in dataloaders["train"]:
             dt = datetime.datetime.now().isoformat()
 
-            inputs, labels = inputs.to(device), labels.to(device)
+            inputs = inputs.to(device)
+            labels = labels.to(device)
             outputs = model(inputs)
             _, preds = torch.max(outputs, 1)
             perct = [torch.nn.functional.softmax(el, dim=0)[i].item() for i, el in zip(preds, outputs)]
