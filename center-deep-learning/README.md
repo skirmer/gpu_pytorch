@@ -8,4 +8,4 @@ The examples given assume that you have a [Saturn Cloud](https://saturncloud.io/
 
 * [Introductory Slides](CDL-Demo.ipynb)
 * [Script version](run_cluster_pyt.py)
-* [Notebook version](CDL-Demo-code.ipynb)
+* [Notebook version](CDL-Demo-Code.ipynb)
