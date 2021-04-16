@@ -280,14 +280,13 @@ if __name__ == "__main__":
 
     ### Saturn Connection Setup ###
     with open('config.json') as f:
-    tokens = json.load(f)
+        tokens = json.load(f)
 
     conn = ExternalConnection(
         project_id=project_id,
         base_url='https://app.internal.saturnenterprise.io',
         saturn_token=tokens['api_token']
     )
-    #conn
 
     cluster = SaturnCluster(
         external_connection=conn,
@@ -298,7 +297,6 @@ if __name__ == "__main__":
 
     client = Client(cluster)
     client.wait_for_workers(6)
-    # client
 
     ### Setup ###
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -308,7 +306,8 @@ if __name__ == "__main__":
         imagenetclasses = [line.strip() for line in f.readlines()]
 
     ### ============== Constants ============== ###
-
+    # Fill in your preferred values, including your own project ID
+    
     model_params = {'n_epochs': 6, 
         'batch_size': 100,
         'base_lr': .01,
