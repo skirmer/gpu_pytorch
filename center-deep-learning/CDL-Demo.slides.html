@@ -14385,17 +14385,27 @@ div.jp-OutputPrompt {
 <div class="slides"><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Dask-Accelerated-Deep-Learning">Dask Accelerated Deep Learning<a class="anchor-link" href="#Dask-Accelerated-Deep-Learning">&#182;</a></h1><p>Stephanie Kirmer<br>
-Senior Data Scientist<br>
-<a href="saturncloud.io">Saturn Cloud</a></p>
-<p>www.stephaniekirmer.com<br>
-@data_stephanie</p>
+<h1 id="Accelerating-Deep-Learning-with-Dask-and-GPUs">Accelerating Deep Learning with Dask and GPUs<a class="anchor-link" href="#Accelerating-Deep-Learning-with-Dask-and-GPUs">&#182;</a></h1><h2 id="Stephanie-Kirmer,--Senior-Data-Scientist">Stephanie Kirmer,  Senior Data Scientist<a class="anchor-link" href="#Stephanie-Kirmer,--Senior-Data-Scientist">&#182;</a></h2><h3 id="Center-for-Deep-Learning,-Northwestern-University">Center for Deep Learning, Northwestern University<a class="anchor-link" href="#Center-for-Deep-Learning,-Northwestern-University">&#182;</a></h3><h3 id="April-27,-2021">April 27, 2021<a class="anchor-link" href="#April-27,-2021">&#182;</a></h3><p><a href="https://www.stephaniekirmer.com">stephaniekirmer.com</a>  | twitter: <a href="https://twitter.com/data_stephanie">@data_stephanie</a>  | <a href="https://saturncloud.io">saturncloud.io</a></p>
+<p><a href="https://github.com/skirmer/gpu_pytorch">https://github.com/skirmer/gpu_pytorch</a></p>
 
+</div>
+</div>
+<div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
+<style>
+div.header {
+    position: absolute; 
+    top: 10px;
+    right: 10px;
+    color: gray;
+    font-size: 12px;
+    }
+</style>
 </div>
 </div></section></section><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Brief-Introduction-to-Dask">Brief Introduction to Dask<a class="anchor-link" href="#Brief-Introduction-to-Dask">&#182;</a></h2><p>Dask is an open-source framework that enables parallelization of Python code.</p>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><h2 id="Brief-Introduction-to-Dask">Brief Introduction to Dask<a class="anchor-link" href="#Brief-Introduction-to-Dask">&#182;</a></h2><p>Dask is an open-source framework that enables parallelization of Python code.</p>
 <p>Two key concepts:</p>
 <ul>
 <li>Distributed data objects</li>
@@ -14406,14 +14416,14 @@ Senior Data Scientist<br>
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Distributed-Data">Distributed Data<a class="anchor-link" href="#Distributed-Data">&#182;</a></h3><p>Data is broken up across multiple machines, allowing analysis on data larger than any single machine's memory.</p>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><h3 id="Distributed-Data">Distributed Data<a class="anchor-link" href="#Distributed-Data">&#182;</a></h3><p>Data is broken up across multiple machines, allowing analysis on data larger than any single machine's memory.</p>
 <p><img src="img/dask_df.png" alt=""></p>
 
 </div>
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Distributed-Computation">Distributed Computation<a class="anchor-link" href="#Distributed-Computation">&#182;</a></h3><p>By using "lazy" evaluation, tasks can be organized and queued into DAGs/task graphs for distribution to workers and later computation.</p>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><h3 id="Distributed-Computation">Distributed Computation<a class="anchor-link" href="#Distributed-Computation">&#182;</a></h3><p>By using "lazy" evaluation, tasks can be organized and queued into DAGs/task graphs for distribution to workers and later computation.</p>
 <p><img src="img/dask_graph.png" alt=""></p>
 
 </div>
@@ -14430,14 +14440,14 @@ The foundation that makes this possible is what's called "lazy" evaluation or de
 </aside></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Dask-Clusters">Dask Clusters<a class="anchor-link" href="#Dask-Clusters">&#182;</a></h2><p>When we implement the Dask framework across multiple machines, the cluster architecture looks something like this. In this structure, we can distribute tasks to the various machines, and return results in aggregate to the client.</p>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><h2 id="Dask-Clusters">Dask Clusters<a class="anchor-link" href="#Dask-Clusters">&#182;</a></h2><p>When we implement the Dask framework across multiple machines, the cluster architecture looks something like this. In this structure, we can distribute tasks to the various machines, and return results in aggregate to the client.</p>
 <p><img src="img/dask-cluster.png" alt=""></p>
 
 </div>
 </div></section></section><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h2 id="Applications-for-Deep-Learning">Applications for Deep Learning<a class="anchor-link" href="#Applications-for-Deep-Learning">&#182;</a></h2><ul>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><h2 id="Applications-for-Deep-Learning">Applications for Deep Learning<a class="anchor-link" href="#Applications-for-Deep-Learning">&#182;</a></h2><ul>
 <li>Process extremely large data using distributed data objects and/or lazy loading</li>
 <li>Train very large or complex models using distributed training</li>
 </ul>
@@ -14446,7 +14456,7 @@ The foundation that makes this possible is what's called "lazy" evaluation or de
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Distributed-Training">Distributed Training<a class="anchor-link" href="#Distributed-Training">&#182;</a></h3><ul>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><h3 id="Distributed-Training">Distributed Training<a class="anchor-link" href="#Distributed-Training">&#182;</a></h3><ul>
 <li>Training a single model across multiple machines simultaneously</li>
 <li>Break training data into subsets, each worker handles a different chunk</li>
 </ul>
@@ -14464,25 +14474,25 @@ The foundation that makes this possible is what's called "lazy" evaluation or de
 </aside></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><img src="img/step1.png" alt=""></p>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><p><img src="img/step1.png" alt=""></p>
 
 </div>
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><img src="img/step2.png" alt=""></p>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><p><img src="img/step2.png" alt=""></p>
 
 </div>
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><img src="img/step3.png" alt=""></p>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><p><img src="img/step3.png" alt=""></p>
 
 </div>
 </div></section></section><section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Demonstration">Demonstration<a class="anchor-link" href="#Demonstration">&#182;</a></h1><p>Training image classification model</p>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><h1 id="Demonstration">Demonstration<a class="anchor-link" href="#Demonstration">&#182;</a></h1><p>Training image classification model</p>
 <ul>
 <li>Architecture: Resnet50 (not pretrained)</li>
 <li>Dataset: Stanford Dogs (20,580 images)</li>
@@ -14492,7 +14502,7 @@ The foundation that makes this possible is what's called "lazy" evaluation or de
 </div></section><section>
 <div class="jp-Cell-inputWrapper"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h3 id="Key-Elements">Key Elements<a class="anchor-link" href="#Key-Elements">&#182;</a></h3><ul>
+<div class = "header"> https://github.com/skirmer/gpu_pytorch </div><h3 id="Key-Elements">Key Elements<a class="anchor-link" href="#Key-Elements">&#182;</a></h3><ul>
 <li>Lazy, parallelized loading of training images (S3 to DataLoader)</li>
 <li>Distributed training across cluster, one job per worker</li>
 <li>Use GPU machines for computation</li>
